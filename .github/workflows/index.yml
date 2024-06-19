@@ -1,0 +1,31 @@
+name: Remote ssh command for master branch
+on: 
+  push: 
+    branches: 
+      - master
+jobs:
+  build:
+    name: Build react-native-strapi-socket-fe enviroment development
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: hoadxit/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DEV_SSH_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          port: ${{ secrets.DEV_PORT }}
+          script: |
+            whoami
+            cd ~/KienBQ/rn-strapi-socket-fe
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/github_key
+            git checkout .
+            git pull origin master
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh  
+            npm install
+            rm -rf .env
+            echo "EXPO_PUBLIC_BE=https://admin.kiendev.click/api" >> .env
+            echo "EXPO_PUBLIC_UPLOAD=https://admin.kiendev.click" >> .env
+            pm2 restart FirstProj
