@@ -70,7 +70,7 @@ const PostDetail = () => {
         }));
       })
       .catch(err => {
-        Alert.alert("Get comments", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Get comments: " + err.message);
       });
   };
 
@@ -107,7 +107,7 @@ const PostDetail = () => {
         handleGetComment(1);
       })
       .catch(err => {
-        Alert.alert("Add comment failed", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Add comment failed: " + err.message);
       });
   };
 
@@ -125,7 +125,7 @@ const PostDetail = () => {
           setPost(res.data.data);
         })
         .catch(err => {
-          Alert.alert("get post detail", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+          alert("get post detail: " + err.message);
         });
     };
 

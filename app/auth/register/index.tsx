@@ -1,7 +1,7 @@
 import apis from "@/utils/apis";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -17,18 +17,13 @@ const RegisterPage = () => {
       form.password.trim() === "" ||
       form.password.trim().length < 6
     ) {
-      return Alert.alert(
-        "Register",
-        " All fields are required! Your password must be least 6 character!",
-        [{ text: "OK", onPress: () => {} }],
-        { cancelable: false }
-      );
+      return alert("Register: " + " All fields are required! Your password must be least 6 character!");
     }
 
     apis
       .register(form.username, form.email, form.password)
       .then(res => {
-        Alert.alert("Register", "Register successfully!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Register: " + "Register successfully!");
         localStorage.setItem(
           "etwl",
           JSON.stringify({
@@ -41,7 +36,7 @@ const RegisterPage = () => {
         router.push("/");
       })
       .catch(err => {
-        Alert.alert("Register", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Register: " + err.message);
       });
   };
 

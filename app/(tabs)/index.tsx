@@ -1,20 +1,8 @@
 import PostItem from "@/components/PostItem";
 import apis from "@/utils/apis";
 import { router } from "expo-router";
-import moment from "moment";
-import { Fragment, useEffect, useRef, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Alert,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from "react-native";
 
 export interface IPostsState {
   id: number;
@@ -85,19 +73,19 @@ export default function HomeScreen() {
         });
       })
       .catch(err => {
-        Alert.alert("get posts", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("get posts: " + err.message);
       });
   };
 
   const onSubmit = () => {
     if (post.content.trim() === "" || post.title.trim() === "") {
-      return Alert.alert("", "Please fill all fields!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
+      return alert("Please fill all fields!");
     }
 
     const localInfo = localStorage.getItem("etwl");
 
     if (!localInfo) {
-      Alert.alert("", "You are not login!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
+      alert("You are not login!");
       router.push("/auth/login");
     }
 
@@ -117,13 +105,13 @@ export default function HomeScreen() {
         },
       })
       .then(res => {
-        Alert.alert("", "Create Post successfully!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Create Post successfully!");
         setPost(initPost);
         setOpenAddPost(false);
         handleGetPost(1);
       })
       .catch(err => {
-        Alert.alert("Create Post", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
+        alert("Create Post: " + err.message);
       });
   };
 
