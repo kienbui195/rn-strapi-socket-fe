@@ -1,13 +1,7 @@
 import apis from "@/utils/apis";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -23,15 +17,18 @@ const RegisterPage = () => {
       form.password.trim() === "" ||
       form.password.trim().length < 6
     ) {
-      return alert(
-        "Register: All fields are required! Your password must be least 6 character!"
+      return Alert.alert(
+        "Register",
+        " All fields are required! Your password must be least 6 character!",
+        [{ text: "OK", onPress: () => {} }],
+        { cancelable: false }
       );
     }
 
     apis
       .register(form.username, form.email, form.password)
-      .then((res) => {
-        alert("Register successfully!");
+      .then(res => {
+        Alert.alert("Register", "Register successfully!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
         localStorage.setItem(
           "etwl",
           JSON.stringify({
@@ -43,8 +40,8 @@ const RegisterPage = () => {
         );
         router.push("/");
       })
-      .catch((err) => {
-        alert("Register:" + err.message);
+      .catch(err => {
+        Alert.alert("Register", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
@@ -60,7 +57,7 @@ const RegisterPage = () => {
           <TextInput
             style={styles.input}
             value={form.username}
-            onChangeText={(username) => setForm({ ...form, username })}
+            onChangeText={username => setForm({ ...form, username })}
           />
         </View>
         <View style={{ gap: 8 }}>
@@ -68,11 +65,7 @@ const RegisterPage = () => {
             <Text style={styles.inputTitle}>Email</Text>
             <Text style={styles.inputRequireDot}>*</Text>
           </View>
-          <TextInput
-            style={styles.input}
-            value={form.email}
-            onChangeText={(email) => setForm({ ...form, email })}
-          />
+          <TextInput style={styles.input} value={form.email} onChangeText={email => setForm({ ...form, email })} />
         </View>
         <View style={{ gap: 8 }}>
           <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
@@ -83,14 +76,14 @@ const RegisterPage = () => {
             style={styles.input}
             secureTextEntry
             value={form.password}
-            onChangeText={(password) => setForm({ ...form, password })}
+            onChangeText={password => setForm({ ...form, password })}
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={onSubmit}>
           <Text style={styles.buttonContent}>Submit</Text>
         </TouchableOpacity>
       </View>
-      <Link href={"/auth/login"} style={{textAlign:'center'}}>
+      <Link href={"/auth/login"} style={{ textAlign: "center" }}>
         <Text style={{}}>Have an account? Login here</Text>
       </Link>
     </View>

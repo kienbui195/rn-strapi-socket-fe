@@ -1,13 +1,7 @@
 import apis from "@/utils/apis";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const LoginPage = () => {
   const [form, setForm] = useState({
@@ -16,20 +10,19 @@ const LoginPage = () => {
   });
 
   const onSubmit = () => {
-    if (
-      form.username.trim() === "" ||
-      form.password.trim() === "" ||
-      form.password.trim().length < 6
-    ) {
-      return alert(
-        "Login: All fields are required! Your password must be least 6 character!"
+    if (form.username.trim() === "" || form.password.trim() === "" || form.password.trim().length < 6) {
+      return Alert.alert(
+        "Login",
+        "All fields are required! Your password must be least 6 character!",
+        [{ text: "OK", onPress: () => {} }],
+        { cancelable: false }
       );
     }
 
     apis
       .login(form.username, form.password)
-      .then((res) => {
-        alert("Login successfully!");
+      .then(res => {
+        Alert.alert("", "Login successfully!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
         localStorage.setItem(
           "etwl",
           JSON.stringify({
@@ -41,8 +34,8 @@ const LoginPage = () => {
         );
         router.push("/");
       })
-      .catch((err) => {
-        alert("Login:" + err.message);
+      .catch(err => {
+        Alert.alert("Login", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
@@ -58,7 +51,7 @@ const LoginPage = () => {
           <TextInput
             style={styles.input}
             value={form.username}
-            onChangeText={(username) => setForm({ ...form, username })}
+            onChangeText={username => setForm({ ...form, username })}
           />
         </View>
 
@@ -71,7 +64,7 @@ const LoginPage = () => {
             style={styles.input}
             secureTextEntry
             value={form.password}
-            onChangeText={(password) => setForm({ ...form, password })}
+            onChangeText={password => setForm({ ...form, password })}
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={onSubmit}>

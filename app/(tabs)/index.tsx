@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Alert,
 } from "react-native";
 
 export interface IPostsState {
@@ -71,10 +72,10 @@ export default function HomeScreen() {
           pageSize: pagination.pageSize,
         },
       })
-      .then((res) => {
+      .then(res => {
         const { data, meta } = res.data;
         const { pagination } = meta;
-        setPosts(page === 1 ? data : (prev) => prev.concat(data));
+        setPosts(page === 1 ? data : prev => prev.concat(data));
         setPagination({
           ...pagination,
           page: pagination.page,
@@ -83,20 +84,20 @@ export default function HomeScreen() {
           total: pagination.total,
         });
       })
-      .catch((err) => {
-        console.log("get posts", err);
+      .catch(err => {
+        Alert.alert("get posts", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
   const onSubmit = () => {
     if (post.content.trim() === "" || post.title.trim() === "") {
-      return alert("Please fill all fields!");
+      return Alert.alert("", "Please fill all fields!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
     }
 
     const localInfo = localStorage.getItem("etwl");
 
     if (!localInfo) {
-      alert("You are not login!");
+      Alert.alert("", "You are not login!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
       router.push("/auth/login");
     }
 
@@ -113,17 +114,16 @@ export default function HomeScreen() {
           },
           created_by_user_id: userInfo,
           created_by_user_name: userName,
-          
         },
       })
-      .then((res) => {
-        alert("Create Post successfully!");
+      .then(res => {
+        Alert.alert("", "Create Post successfully!", [{ text: "OK", onPress: () => {} }], { cancelable: false });
         setPost(initPost);
         setOpenAddPost(false);
         handleGetPost(1);
       })
-      .catch((err) => {
-        alert("Create Post" + err.message);
+      .catch(err => {
+        Alert.alert("Create Post", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
@@ -147,10 +147,7 @@ export default function HomeScreen() {
           />
         ))}
       </ScrollView>
-      <TouchableOpacity
-        style={styles.buttonAdd}
-        onPress={() => setOpenAddPost(true)}
-      >
+      <TouchableOpacity style={styles.buttonAdd} onPress={() => setOpenAddPost(true)}>
         <Text style={styles.buttonAddText}>+</Text>
       </TouchableOpacity>
       <Modal
@@ -167,11 +164,7 @@ export default function HomeScreen() {
                 <Text style={styles.inputTitle}>Title</Text>
                 <Text style={styles.inputRequireDot}>*</Text>
               </View>
-              <TextInput
-                style={styles.input}
-                value={post.title}
-                onChangeText={(title) => setPost({ ...post, title })}
-              />
+              <TextInput style={styles.input} value={post.title} onChangeText={title => setPost({ ...post, title })} />
             </View>
             <View style={{ gap: 8 }}>
               <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
@@ -182,7 +175,7 @@ export default function HomeScreen() {
                 style={styles.inputArea}
                 multiline
                 value={post.content}
-                onChangeText={(content) => setPost({ ...post, content })}
+                onChangeText={content => setPost({ ...post, content })}
               />
             </View>
             <TouchableOpacity style={styles.button} onPress={onSubmit}>

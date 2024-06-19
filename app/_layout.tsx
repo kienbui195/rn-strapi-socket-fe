@@ -1,8 +1,4 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack, router, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +7,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { socket } from "@/utils/socket";
+import { Alert } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,14 +20,19 @@ export default function RootLayout() {
   });
 
   socket.on("connect", () => {
-    socket.on("comment:create", (data) => {
+    socket.on("comment:create", data => {
       const localInfo = localStorage.getItem("etwl");
       if (!localInfo) return;
 
       const userId = JSON.parse(localInfo).id;
 
       if (data.data.attributes.post_by_user_id === userId && data.data.attributes.created_by_user_id !== userId) {
-        alert(`${data.data.attributes.created_by_user_name} đã bình luận về bài viết của bạn!`)
+        Alert.alert(
+          "",
+          `${data.data.attributes.created_by_user_name} đã bình luận về bài viết của bạn!`,
+          [{ text: "OK", onPress: () => {} }],
+          { cancelable: false }
+        );
       }
     });
   });

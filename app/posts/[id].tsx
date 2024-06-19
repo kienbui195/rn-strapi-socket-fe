@@ -2,15 +2,7 @@ import { ICommentState } from "@/components/PostItem";
 import { IPostState, IPostsState, IUserState } from "@/app/(tabs)";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import apis from "@/utils/apis";
 import { ScrollView } from "react-native-gesture-handler";
 import ContentItem from "@/components/PostItem/PostItem";
@@ -28,9 +20,7 @@ const PostDetail = () => {
     total: 0,
   });
   const [openInput, setOpenInput] = useState<boolean>(false);
-  const userInfo = localStorage.getItem("etwl")
-    ? JSON.parse(localStorage.getItem("etwl") as string).id
-    : 0;
+  const userInfo = localStorage.getItem("etwl") ? JSON.parse(localStorage.getItem("etwl") as string).id : 0;
   const [post, setPost] = useState<IPostsState>({
     id: 0,
     attributes: {
@@ -67,11 +57,11 @@ const PostDetail = () => {
           pageSize: pagination.pageSize,
         },
       })
-      .then((res) => {
+      .then(res => {
         const { data, meta } = res.data;
         const { pagination } = meta;
-        setComments(page === 1 ? data : (prev) => prev.concat(data));
-        setPagination((prev) => ({
+        setComments(page === 1 ? data : prev => prev.concat(data));
+        setPagination(prev => ({
           ...prev,
           page: pagination.page,
           pageCount: pagination.pageCount,
@@ -79,8 +69,8 @@ const PostDetail = () => {
           total: pagination.total,
         }));
       })
-      .catch((err) => {
-        alert("Get comments:" + err.message);
+      .catch(err => {
+        Alert.alert("Get comments", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
@@ -107,18 +97,17 @@ const PostDetail = () => {
           },
           comment_for_id: post.id,
           post_by_user_id: post.attributes.created_by_user.data.id,
-          post_by_user_name:
-            post.attributes.created_by_user.data.attributes.username,
+          post_by_user_name: post.attributes.created_by_user.data.attributes.username,
         },
       })
-      .then((res) => {
+      .then(res => {
         alert("Add comment successfully!");
         setComment("");
         setOpenInput(false);
         handleGetComment(1);
       })
-      .catch((err) => {
-        alert("Add comment failed: " + err.message);
+      .catch(err => {
+        Alert.alert("Add comment failed", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
       });
   };
 
@@ -132,11 +121,11 @@ const PostDetail = () => {
             },
           },
         })
-        .then((res) => {
+        .then(res => {
           setPost(res.data.data);
         })
-        .catch((err) => {
-          console.log("get post detail" + err.message);
+        .catch(err => {
+          Alert.alert("get post detail", err.message, [{ text: "OK", onPress: () => {} }], { cancelable: false });
         });
     };
 
@@ -145,9 +134,9 @@ const PostDetail = () => {
 
   useEffect(() => {
     if (post.id !== 0) {
-      handleGetComment(1)
+      handleGetComment(1);
     }
-  }, [post.id])
+  }, [post.id]);
 
   return (
     <View
@@ -174,14 +163,11 @@ const PostDetail = () => {
                   <Text style={{}}>{`${
                     userInfo === _comment.attributes.created_by_user.data.id
                       ? "You"
-                      : _comment.attributes.created_by_user.data.attributes
-                          .username
+                      : _comment.attributes.created_by_user.data.attributes.username
                   }: ${_comment.attributes.content}`}</Text>
                 </View>
                 {pagination.page < pagination.pageCount && (
-                  <TouchableOpacity
-                    onPress={() => handleGetComment(pagination.page + 1)}
-                  >
+                  <TouchableOpacity onPress={() => handleGetComment(pagination.page + 1)}>
                     <Text>Load More</Text>
                   </TouchableOpacity>
                 )}
@@ -193,13 +179,8 @@ const PostDetail = () => {
         </ScrollView>
       </View>
 
-      <TouchableOpacity
-        style={styles.addCommentBtn}
-        onPress={() => setOpenInput(true)}
-      >
-        <Text style={{ fontWeight: 500, color: "white", textAlign: "center" }}>
-          Add Comment
-        </Text>
+      <TouchableOpacity style={styles.addCommentBtn} onPress={() => setOpenInput(true)}>
+        <Text style={{ fontWeight: 500, color: "white", textAlign: "center" }}>Add Comment</Text>
       </TouchableOpacity>
 
       <Modal
@@ -213,19 +194,12 @@ const PostDetail = () => {
         <TextInput
           placeholder="type your comment..."
           value={comment}
-          onChangeText={(comment) => setComment(comment)}
+          onChangeText={comment => setComment(comment)}
           style={styles.inputArea}
           multiline
         />
-        <TouchableOpacity
-          style={styles.addCommentBtn}
-          onPress={handleAddComment}
-        >
-          <Text
-            style={{ fontWeight: 500, color: "white", textAlign: "center" }}
-          >
-            Submit
-          </Text>
+        <TouchableOpacity style={styles.addCommentBtn} onPress={handleAddComment}>
+          <Text style={{ fontWeight: 500, color: "white", textAlign: "center" }}>Submit</Text>
         </TouchableOpacity>
       </Modal>
     </View>
